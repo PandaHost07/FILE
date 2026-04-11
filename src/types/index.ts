@@ -71,6 +71,8 @@ export interface ApiKeys {
   imagen: string
   /** Bisa berisi beberapa key dipisah koma: "key1,key2,key3" */
   openai: string
+  /** HeyGen / video API (opsional; slot untuk integrasi) */
+  heygen: string
 }
 
 export type ApiUsageProvider = 'gemini' | 'imagen' | 'openai' | 'heygen'
