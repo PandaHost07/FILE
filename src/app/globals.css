@@ -242,7 +242,7 @@
   }
 }
 
-/* ─── Login / register: sudut potong + latar animasi ─── */
+/* ─── Login / register: sudut potong (kiri atas & kanan bawah) + latar animasi ─── */
 .rg-chamfer {
   clip-path: polygon(28px 0%, 100% 0%, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0% 100%, 0% 28px);
 }
@@ -251,12 +251,67 @@
   min-height: 100dvh;
 }
 
+/* Mesh gradient bergerak — lapisan paling belakang */
+.rg-login-aurora {
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(ellipse 90% 70% at 15% 25%, rgba(16, 185, 129, 0.22), transparent 52%),
+    radial-gradient(ellipse 80% 60% at 85% 75%, rgba(139, 92, 246, 0.18), transparent 50%),
+    radial-gradient(ellipse 55% 45% at 50% 45%, rgba(6, 78, 59, 0.35), transparent 65%),
+    radial-gradient(ellipse 40% 35% at 70% 15%, rgba(34, 211, 238, 0.1), transparent 45%);
+  animation: rg-login-aurora-move 22s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes rg-login-aurora-move {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  33% {
+    transform: translate(3%, -4%) scale(1.06) rotate(1deg);
+    opacity: 0.92;
+  }
+  66% {
+    transform: translate(-4%, 2%) scale(1.03) rotate(-0.5deg);
+    opacity: 0.88;
+  }
+}
+
+/* Garis diagonal halus (tech / schematic) */
+.rg-login-diagonals {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -35deg,
+    transparent,
+    transparent 38px,
+    rgba(16, 185, 129, 0.04) 38px,
+    rgba(16, 185, 129, 0.04) 39px
+  );
+  opacity: 0.5;
+  animation: rg-login-diag-shift 40s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rg-login-diag-shift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 120px;
+  }
+}
+
 .rg-login-grid {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 48px 48px;
-  animation: rg-login-grid-pan 48s linear infinite;
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: rg-login-grid-pan 36s linear infinite;
+  mask-image: radial-gradient(ellipse 85% 75% at 50% 50%, black 20%, transparent 75%);
 }
 
 @keyframes rg-login-grid-pan {
@@ -264,7 +319,42 @@
     background-position: 0 0, 0 0;
   }
   100% {
-    background-position: 48px 48px, 48px 48px;
+    background-position: 40px 40px, 40px 40px;
+  }
+}
+
+/* Scan line tipis (CRT / hud) */
+.rg-login-scan {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.rg-login-scan::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(to bottom, transparent, rgba(16, 185, 129, 0.06), transparent);
+  animation: rg-login-scan-move 11s linear infinite;
+}
+
+@keyframes rg-login-scan-move {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
   }
 }
 
@@ -311,5 +401,210 @@
   50% {
     transform: translate(-10%, -6%) scale(1.06);
     opacity: 0.55;
+  }
+}
+
+/* Partikel node (titik bercahaya) */
+.rg-login-nodes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.rg-login-nodes span {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 1px;
+  background: rgba(16, 185, 129, 0.85);
+  box-shadow: 0 0 10px 1px rgba(16, 185, 129, 0.45);
+  animation: rg-login-node-pulse 4.2s ease-in-out infinite;
+}
+
+.rg-login-nodes span:nth-child(2n) {
+  background: rgba(6, 182, 212, 0.75);
+  box-shadow: 0 0 10px 1px rgba(34, 211, 238, 0.35);
+  animation-duration: 5.5s;
+}
+
+.rg-login-nodes span:nth-child(3n) {
+  background: rgba(167, 139, 250, 0.6);
+  box-shadow: 0 0 10px 1px rgba(139, 92, 246, 0.35);
+  animation-duration: 3.8s;
+}
+
+.rg-login-nodes span:nth-child(1) {
+  left: 7%;
+  top: 14%;
+  animation-delay: 0s;
+}
+.rg-login-nodes span:nth-child(2) {
+  left: 18%;
+  top: 72%;
+  animation-delay: 0.35s;
+}
+.rg-login-nodes span:nth-child(3) {
+  left: 84%;
+  top: 22%;
+  animation-delay: 0.7s;
+}
+.rg-login-nodes span:nth-child(4) {
+  left: 92%;
+  top: 68%;
+  animation-delay: 0.2s;
+}
+.rg-login-nodes span:nth-child(5) {
+  left: 44%;
+  top: 8%;
+  animation-delay: 1.1s;
+}
+.rg-login-nodes span:nth-child(6) {
+  left: 55%;
+  top: 88%;
+  animation-delay: 0.55s;
+}
+.rg-login-nodes span:nth-child(7) {
+  left: 30%;
+  top: 38%;
+  animation-delay: 1.4s;
+}
+.rg-login-nodes span:nth-child(8) {
+  left: 72%;
+  top: 45%;
+  animation-delay: 0.9s;
+}
+.rg-login-nodes span:nth-child(9) {
+  left: 12%;
+  top: 48%;
+  animation-delay: 1.8s;
+}
+.rg-login-nodes span:nth-child(10) {
+  left: 65%;
+  top: 12%;
+  animation-delay: 0.15s;
+}
+.rg-login-nodes span:nth-child(11) {
+  left: 38%;
+  top: 62%;
+  animation-delay: 2.1s;
+}
+.rg-login-nodes span:nth-child(12) {
+  left: 78%;
+  top: 82%;
+  animation-delay: 1.25s;
+}
+.rg-login-nodes span:nth-child(13) {
+  left: 52%;
+  top: 28%;
+  animation-delay: 0.65s;
+}
+.rg-login-nodes span:nth-child(14) {
+  left: 25%;
+  top: 88%;
+  animation-delay: 1.95s;
+}
+.rg-login-nodes span:nth-child(15) {
+  left: 88%;
+  top: 42%;
+  animation-delay: 0.5s;
+}
+.rg-login-nodes span:nth-child(16) {
+  left: 48%;
+  top: 52%;
+  animation-delay: 1.5s;
+}
+
+@keyframes rg-login-node-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+/* Input: kotak tegas + aksen vertikal (wireframe) */
+.rg-login-input {
+  width: 100%;
+  border: 1px solid rgba(63, 63, 70, 0.95);
+  background: rgba(6, 6, 8, 0.92);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: rgb(244 244 245);
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    inset 3px 0 0 -1px rgba(16, 185, 129, 0.45);
+}
+
+.rg-login-input::placeholder {
+  color: rgb(82 82 91);
+}
+
+.rg-login-input:focus {
+  border-color: rgba(16, 185, 129, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    inset 3px 0 0 -1px rgba(16, 185, 129, 0.95),
+    0 0 0 1px rgba(16, 185, 129, 0.12);
+}
+
+/* Tombol login: kilau halus */
+.rg-login-submit {
+  position: relative;
+  overflow: hidden;
+}
+
+.rg-login-submit::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.16) 50%, transparent 62%);
+  transform: translateX(-100%);
+  animation: rg-login-shimmer 3.2s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rg-login-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+/* Kartu: garis sudut dekoratif (teknik) */
+.rg-login-card-glow {
+  box-shadow:
+    0 0 0 1px rgba(16, 185, 129, 0.12),
+    0 0 40px -8px rgba(16, 185, 129, 0.15),
+    0 24px 64px -20px rgba(0, 0, 0, 0.85),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rg-login-aurora,
+  .rg-login-diagonals,
+  .rg-login-grid,
+  .rg-login-scan::before,
+  .rg-login-blob-a,
+  .rg-login-blob-b,
+  .rg-login-blob-c,
+  .rg-login-nodes span,
+  .rg-login-submit::before {
+    animation: none !important;
+  }
+
+  .rg-login-grid {
+    mask-image: none;
   }
 }
