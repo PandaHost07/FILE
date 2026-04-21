@@ -25,6 +25,7 @@ import { parseKeys, getKeyCount, resetRotation } from '@/lib/keyRotation'
 import type { ApiUsageProvider } from '@/types'
 import { cn } from '@/lib/utils'
 import { clearApiKeysIDB } from '@/lib/apiKeysIDB'
+import { CloudSyncSection } from '@/components/settings/CloudSyncSection'
 
 const GEMINI_MODELS = [
     { id: 'gemini-2.0-flash-lite', label: 'Gemini 2.0 Flash Lite', desc: 'Hemat quota, stabil — recommended' },
@@ -718,6 +719,8 @@ export default function SettingsPage() {
                     )}
 
                     {activeTab === 'data' && (
+                        <div className="space-y-6">
+                        <CloudSyncSection />
                         <section className="overflow-hidden rounded-2xl border border-red-500/25 bg-gradient-to-b from-red-950/30 to-[#121214]">
                             <div className="border-b border-red-500/20 bg-red-950/20 px-4 py-3">
                                 <h2 className="text-sm font-bold text-red-300">Zona berbahaya</h2>
@@ -758,6 +761,7 @@ export default function SettingsPage() {
                                 )}
                             </div>
                         </section>
+                        </div>
                     )}
                 </div>
             </div>

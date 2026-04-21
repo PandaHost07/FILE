@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { ToastProvider, ToastList } from '@/components/ui/toast'
 import { StorePersistence } from '@/components/StorePersistence'
+import { AuthProvider } from '@/components/AuthProvider'
 
 const inter = Inter({
     subsets: ['latin'],
@@ -31,9 +32,11 @@ export default function RootLayout({
         <html lang="id" className={`${inter.variable} dark antialiased`}>
             <body className="bg-zinc-950 text-zinc-100">
                 <ToastProvider>
-                    <StorePersistence />
-                    {children}
-                    <ToastList />
+                    <AuthProvider>
+                        <StorePersistence />
+                        {children}
+                        <ToastList />
+                    </AuthProvider>
                 </ToastProvider>
             </body>
         </html>
