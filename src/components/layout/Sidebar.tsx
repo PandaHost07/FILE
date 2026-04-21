@@ -19,6 +19,7 @@ import {
     Scissors,
     Clapperboard,
     ShoppingBag,
+    X,
     type LucideIcon,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -245,16 +246,58 @@ export function Sidebar() {
 
     return (
         <>
-            {!mobileNavOpen && (
-                <button
-                    type="button"
-                    onClick={openMobileMenu}
-                    className="touch-manipulation fixed left-[max(1rem,env(safe-area-inset-left))] top-[max(1rem,env(safe-area-inset-top))] z-[60] flex size-11 min-h-11 min-w-11 items-center justify-center rounded-xl border border-[#2a2a2e] bg-[#0a0a0c] text-zinc-200 shadow-lg shadow-black/40 transition hover:border-emerald-500/35 hover:bg-[#121214] active:scale-95 lg:hidden"
-                    aria-label="Buka menu"
-                >
-                    <Menu className="size-5" aria-hidden />
-                </button>
-            )}
+            {/* Navbar HP / tablet: RestoreGen + menu (max-lg) */}
+            <header
+                role="banner"
+                aria-label="RestoreGen"
+                className={cn(
+                    'fixed inset-x-0 top-0 z-[60] border-b border-[#1a1a1a]',
+                    'bg-[#0a0a0c]/95 backdrop-blur-md supports-[backdrop-filter]:bg-[#0a0a0c]/80',
+                    'pt-[env(safe-area-inset-top)] shadow-[0_6px_24px_-8px_rgba(0,0,0,0.45)] lg:hidden'
+                )}
+            >
+                <div className="flex min-h-14 items-center gap-2.5 px-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))]">
+                    <button
+                        type="button"
+                        onClick={() => (mobileNavOpen ? setMobileNavOpen(false) : openMobileMenu())}
+                        className="touch-manipulation flex size-11 shrink-0 items-center justify-center rounded-xl border border-[#2a2a2e] bg-[#121214] text-zinc-200 shadow-sm transition hover:border-emerald-500/35 hover:bg-emerald-500/[0.06] hover:text-emerald-200 active:scale-95"
+                        aria-expanded={mobileNavOpen}
+                        aria-controls="app-sidebar-nav"
+                        aria-label={mobileNavOpen ? 'Tutup menu' : 'Buka menu'}
+                    >
+                        {mobileNavOpen ? (
+                            <X className="size-5" aria-hidden />
+                        ) : (
+                            <Menu className="size-5" aria-hidden />
+                        )}
+                    </button>
+                    <Link
+                        href="/"
+                        title="RestoreGen — beranda"
+                        onClick={closeMobileSidebar}
+                        className="group flex min-w-0 flex-1 items-center gap-3 rounded-xl py-0.5 pl-1 pr-2 no-underline outline-none transition-[background] active:scale-[0.99] hover:bg-white/[0.04] focus-visible:ring-2 focus-visible:ring-emerald-500/40"
+                    >
+                        <div
+                            className={cn(
+                                'flex size-9 shrink-0 items-center justify-center rounded-xl',
+                                'bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500',
+                                'font-bold text-[17px] text-white shadow-md shadow-emerald-900/30 ring-1 ring-white/10',
+                                'transition group-hover:shadow-lg group-hover:shadow-emerald-500/20'
+                            )}
+                        >
+                            <span className="leading-none tracking-tight">R</span>
+                        </div>
+                        <div className="min-w-0 flex-1 text-left leading-tight">
+                            <span className="block truncate text-[15px] font-bold tracking-tight text-white sm:text-[16px]">
+                                Restore<span className="font-medium text-zinc-500">Gen</span>
+                            </span>
+                            <span className="mt-0.5 block truncate text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-500/85">
+                                Prompt &amp; scene
+                            </span>
+                        </div>
+                    </Link>
+                </div>
+            </header>
 
             {mobileNavOpen && (
                 <button
@@ -267,8 +310,11 @@ export function Sidebar() {
 
             <aside
                 className={cn(
-                    'flex h-[100dvh] max-h-[100dvh] shrink-0 flex-col overflow-hidden transition-[width,transform] duration-300 ease-out motion-reduce:transition-none',
-                    'fixed inset-y-0 left-0 z-50 lg:relative lg:z-auto',
+                    'flex shrink-0 flex-col overflow-hidden transition-[width,transform] duration-300 ease-out motion-reduce:transition-none',
+                    'fixed bottom-0 left-0 z-50 lg:relative lg:inset-auto lg:z-auto',
+                    /* Di bawah app bar mobile (tinggi = safe + 3.5rem + border 1px) */
+                    'max-lg:top-[calc(env(safe-area-inset-top)+3.5rem+1px)] max-lg:h-[calc(100dvh-env(safe-area-inset-top)-3.5rem-1px)] max-lg:max-h-none',
+                    'lg:top-auto lg:h-[100dvh] lg:max-h-[100dvh]',
                     mobileNavOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
                     !mobileNavOpen && 'max-lg:pointer-events-none',
                     collapsed ? 'w-[72px]' : 'w-[min(264px,85vw)] lg:w-[264px]',
@@ -342,8 +388,9 @@ export function Sidebar() {
                     </button>
                 </div>
 
-                {/* Nav */}
+                {/* Nav — id untuk aria-controls tombol menu mobile */}
                 <nav
+                    id="app-sidebar-nav"
                     className={cn(
                         'scrollbar-none flex-1 space-y-6 overflow-y-auto py-5 pb-4',
                         collapsed ? 'px-2' : 'px-3'
