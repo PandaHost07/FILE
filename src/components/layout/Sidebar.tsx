@@ -153,6 +153,12 @@ export function Sidebar() {
         }
     }, [])
 
+    /** HP: drawer selalu tampil lebar penuh dengan label (bukan mode ikon). */
+    const openMobileMenu = useCallback(() => {
+        setCollapsed(false)
+        setMobileNavOpen(true)
+    }, [])
+
     useEffect(() => {
         const mq = window.matchMedia('(min-width: 1024px)')
         const sync = () => setMobileNavOpen(mq.matches)
@@ -160,6 +166,22 @@ export function Sidebar() {
         mq.addEventListener('change', sync)
         return () => mq.removeEventListener('change', sync)
     }, [])
+
+    /** Kunci scroll latar saat menu HP terbuka (iOS/Android). */
+    useEffect(() => {
+        const mobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches
+        if (!mobile || !mobileNavOpen) return
+        const html = document.documentElement
+        const body = document.body
+        const prevHtml = html.style.overflow
+        const prevBody = body.style.overflow
+        html.style.overflow = 'hidden'
+        body.style.overflow = 'hidden'
+        return () => {
+            html.style.overflow = prevHtml
+            body.style.overflow = prevBody
+        }
+    }, [mobileNavOpen])
 
     useEffect(() => {
         return () => {
@@ -226,8 +248,8 @@ export function Sidebar() {
             {!mobileNavOpen && (
                 <button
                     type="button"
-                    onClick={() => setMobileNavOpen(true)}
-                    className="fixed left-4 top-4 z-[60] flex size-11 items-center justify-center rounded-xl border border-[#2a2a2e] bg-[#0a0a0c] text-zinc-200 shadow-lg shadow-black/40 transition hover:border-emerald-500/35 hover:bg-[#121214] lg:hidden"
+                    onClick={openMobileMenu}
+                    className="touch-manipulation fixed left-[max(1rem,env(safe-area-inset-left))] top-[max(1rem,env(safe-area-inset-top))] z-[60] flex size-11 min-h-11 min-w-11 items-center justify-center rounded-xl border border-[#2a2a2e] bg-[#0a0a0c] text-zinc-200 shadow-lg shadow-black/40 transition hover:border-emerald-500/35 hover:bg-[#121214] active:scale-95 lg:hidden"
                     aria-label="Buka menu"
                 >
                     <Menu className="size-5" aria-hidden />
@@ -238,14 +260,14 @@ export function Sidebar() {
                 <button
                     type="button"
                     onClick={() => setMobileNavOpen(false)}
-                    className="fixed inset-0 z-40 bg-black/60 lg:hidden"
+                    className="touch-manipulation fixed inset-0 z-40 bg-black/60 transition-opacity duration-200 lg:hidden"
                     aria-label="Tutup menu"
                 />
             )}
 
             <aside
                 className={cn(
-                    'flex h-screen shrink-0 flex-col overflow-hidden transition-[width,transform] duration-200 ease-out',
+                    'flex h-[100dvh] max-h-[100dvh] shrink-0 flex-col overflow-hidden transition-[width,transform] duration-300 ease-out motion-reduce:transition-none',
                     'fixed inset-y-0 left-0 z-50 lg:relative lg:z-auto',
                     mobileNavOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
                     !mobileNavOpen && 'max-lg:pointer-events-none',

@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { ToastProvider, ToastList } from '@/components/ui/toast'
@@ -12,6 +12,13 @@ const inter = Inter({
 export const metadata: Metadata = {
     title: 'RestoreGen — Restoration Prompt Generator',
     description: 'Generate AI prompts for restoration content projects',
+}
+
+/** HP berponceng: `env(safe-area-inset-*)` berfungsi jika viewport memakai cover. */
+export const viewport: Viewport = {
+    width: 'device-width',
+    initialScale: 1,
+    viewportFit: 'cover',
 }
 
 export default function RootLayout({

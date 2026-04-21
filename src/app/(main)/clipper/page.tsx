@@ -459,7 +459,7 @@ export default function ClipperPage() {
                                             type="button"
                                             onClick={() => void handleProcess()}
                                             disabled={busy || !file}
-                                            className="inline-flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-400 px-4 text-sm font-bold text-[#140514] shadow-lg shadow-amber-500/20 transition hover:from-amber-400 hover:to-amber-300 disabled:cursor-not-allowed disabled:opacity-40"
+                                            className="touch-manipulation inline-flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-400 px-4 text-sm font-bold text-[#140514] shadow-lg shadow-amber-500/20 transition hover:from-amber-400 hover:to-amber-300 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
                                         >
                                             {busy ? (
                                                 <>

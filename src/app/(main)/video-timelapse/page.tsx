@@ -403,9 +403,10 @@ Format:
                                 </div>
 
                                 <button
-                                    onClick={handleGenerateJSON}
+                                    type="button"
+                                    onClick={() => void handleGenerateJSON()}
                                     disabled={generating}
-                                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-purple-600 px-5 py-3.5 text-sm font-bold text-white transition-all hover:bg-purple-500 disabled:opacity-50 shadow-[0_0_20px_rgba(168,85,247,0.15)]"
+                                    className="touch-manipulation flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-purple-600 px-5 py-3.5 text-sm font-bold text-white transition-all hover:bg-purple-500 active:scale-[0.99] disabled:opacity-50 shadow-[0_0_20px_rgba(168,85,247,0.15)]"
                                 >
                                     {generating ? <Loader2 className="size-4 animate-spin" /> : <Code className="size-4" />}
                                     Generate Token-Saving JSON
