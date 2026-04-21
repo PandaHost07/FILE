@@ -1,10 +1,18 @@
+import { auth } from '@/auth'
 import { Sidebar } from '@/components/layout/Sidebar'
+import { redirect } from 'next/navigation'
 
-export default function MainShellLayout({
+/** Lapisan kedua: tanpa sesi tidak boleh me-render shell app (selain middleware). */
+export default async function MainShellLayout({
     children,
 }: Readonly<{
     children: React.ReactNode
 }>) {
+    const session = await auth()
+    if (!session?.user) {
+        redirect('/login')
+    }
+
     return (
         <div className="flex min-h-0 h-[100dvh] max-h-[100dvh] overflow-hidden bg-[#000000]">
             <Sidebar />
