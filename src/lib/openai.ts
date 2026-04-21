@@ -143,3 +143,79 @@ export async function callOpenAIRaw(
 ): Promise<string> {
     return callOpenAI(apiKey, systemPrompt, userMessage)
 }
+
+export type OpenAiUsage = {
+    promptTokens: number
+    completionTokens: number
+    totalTokens: number
+}
+
+/** Sama seperti callOpenAI tetapi mengembalikan usage + max_tokens dapat diatur. */
+export async function callOpenAIWithUsage(
+    apiKey: string,
+    systemPrompt: string,
+    userMessage: string,
+    maxTokens = 1000,
+    timeoutMs = 30_000
+): Promise<{ text: string; usage: OpenAiUsage | null }> {
+    if (!apiKey) throw new Error('OpenAI API key tidak boleh kosong')
+
+    const controller = new AbortController()
+    const timer = setTimeout(() => controller.abort(), timeoutMs)
+
+    try {
+        const res = await fetch(BASE_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${apiKey}`,
+            },
+            signal: controller.signal,
+            body: JSON.stringify({
+                model: MODEL,
+                messages: [
+                    { role: 'system', content: systemPrompt },
+                    { role: 'user', content: userMessage },
+                ],
+                temperature: 0.8,
+                max_tokens: maxTokens,
+            }),
+        })
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}))
+            const msg = (err as { error?: { message?: string } })?.error?.message ?? res.statusText
+            if (res.status === 401) throw new Error('OpenAI: API key tidak valid')
+            if (res.status === 429) throw new Error('OpenAI: Rate limit atau quota habis')
+            if (res.status === 402) throw new Error('OpenAI: Saldo habis, top up di platform.openai.com')
+            throw new Error(`OpenAI error ${res.status}: ${msg}`)
+        }
+
+        const data = (await res.json()) as {
+            choices?: { message?: { content?: string } }[]
+            usage?: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number }
+        }
+        const text: string = data?.choices?.[0]?.message?.content ?? ''
+        if (!text) throw new Error('OpenAI mengembalikan respons kosong')
+        recordApiUsage('openai')
+
+        const u = data.usage
+        const usage: OpenAiUsage | null =
+            u && (u.prompt_tokens != null || u.completion_tokens != null)
+                ? {
+                      promptTokens: u.prompt_tokens ?? 0,
+                      completionTokens: u.completion_tokens ?? 0,
+                      totalTokens: u.total_tokens ?? (u.prompt_tokens ?? 0) + (u.completion_tokens ?? 0),
+                  }
+                : null
+
+        return { text, usage }
+    } catch (err) {
+        if (err instanceof Error && err.name === 'AbortError') {
+            throw new Error('Request timeout setelah 30 detik')
+        }
+        throw err
+    } finally {
+        clearTimeout(timer)
+    }
+}

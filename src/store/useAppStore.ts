@@ -12,11 +12,23 @@ import type {
     Template,
 } from '@/types'
 
+const defaultApiKeys = (): ApiKeys => ({
+    gemini: '',
+    imagen: '',
+    openai: '',
+    heygen: '',
+    groq: '',
+    fal: '',
+    huggingface: '',
+})
+
 const defaultApiUsage = (): Record<ApiUsageProvider, ApiUsageEntry> => ({
     gemini: { requests: 0, lastAt: null },
     imagen: { requests: 0, lastAt: null },
     openai: { requests: 0, lastAt: null },
     heygen: { requests: 0, lastAt: null },
+    fal: { requests: 0, lastAt: null },
+    huggingface: { requests: 0, lastAt: null },
 })
 
 function generateId(): string {
@@ -31,7 +43,7 @@ const useAppStore = create<AppState>()(
             templates: [],
             activeProjectId: null,
             activeSceneId: null,
-            apiKeys: { gemini: '', imagen: '', openai: '', heygen: '' },
+            apiKeys: defaultApiKeys(),
             apiUsage: defaultApiUsage(),
 
             // ─── Project Actions ──────────────────────────────────────────────────
@@ -254,7 +266,8 @@ const useAppStore = create<AppState>()(
                 projectId: string,
                 sceneId: string,
                 imagePrompt: string,
-                videoPrompt: string
+                videoPrompt: string,
+                audioPrompt?: string
             ): void => {
                 set((state) => {
                     const projects = state.projects.map((p) => {
@@ -265,7 +278,13 @@ const useAppStore = create<AppState>()(
                             ...p,
                             scenes: {
                                 ...p.scenes,
-                                [sceneId]: { ...scene, imagePrompt, videoPrompt, promptStatus: 'sudah' as const },
+                                [sceneId]: { 
+                                    ...scene, 
+                                    imagePrompt, 
+                                    videoPrompt, 
+                                    ...(audioPrompt !== undefined ? { audioPrompt } : {}),
+                                    promptStatus: 'sudah' as const 
+                                },
                             },
                             updatedAt: Date.now(),
                         }
@@ -376,7 +395,7 @@ const useAppStore = create<AppState>()(
             },
 
             clearApiKeys: (): void => {
-                set({ apiKeys: { gemini: '', imagen: '', openai: '', heygen: '' } })
+                set({ apiKeys: defaultApiKeys() })
             },
 
             recordApiUsage: (provider: ApiUsageProvider): void => {
@@ -415,6 +434,15 @@ const useAppStore = create<AppState>()(
                 apiKeys: state.apiKeys,
                 apiUsage: state.apiUsage ?? defaultApiUsage(),
             }),
+            merge: (persisted, current) => {
+                const p = (persisted ?? {}) as Partial<AppState>
+                return {
+                    ...current,
+                    ...p,
+                    apiKeys: { ...defaultApiKeys(), ...p.apiKeys },
+                    apiUsage: { ...defaultApiUsage(), ...p.apiUsage },
+                }
+            },
         }
     )
 )

@@ -1,6 +1,5 @@
 @import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import "./shadcn-tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -118,8 +117,11 @@
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
   }
 
   body {
@@ -128,5 +130,114 @@
 
   html {
     @apply font-sans;
+  }
+}
+
+/* Custom Premium Dark Scrollbar for the whole app */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #222222;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #333333;
+}
+
+/* Utility to hide scrollbar entirely when needed */
+@layer utilities {
+  .scrollbar-none {
+    scrollbar-width: none; /* Firefox */
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none; /* Chrome, Edge, Safari */
+  }
+
+  /** Kartu proyek sidebar — border + glow bergerak (emerald → cyan → violet → fuchsia) */
+  .rg-sidebar-project-shell {
+    position: relative;
+    border-radius: 1rem;
+    padding: 1px;
+    background: linear-gradient(
+      125deg,
+      rgba(34, 197, 94, 0.75),
+      rgba(34, 211, 238, 0.7),
+      rgba(139, 92, 246, 0.75),
+      rgba(217, 70, 239, 0.7),
+      rgba(34, 197, 94, 0.75)
+    );
+    background-size: 400% 400%;
+    animation:
+      rg-proj-gradient-shift 14s ease infinite,
+      rg-proj-glow-shift 12s ease-in-out infinite;
+  }
+
+  .rg-sidebar-project-inner {
+    position: relative;
+    border-radius: calc(1rem - 1px);
+    overflow: hidden;
+    background: #121214;
+  }
+
+  .rg-sidebar-project-aurora {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0.32;
+    background: linear-gradient(
+      135deg,
+      rgba(34, 197, 94, 0.35) 0%,
+      rgba(34, 211, 238, 0.3) 33%,
+      rgba(139, 92, 246, 0.35) 66%,
+      rgba(217, 70, 239, 0.3) 100%
+    );
+    background-size: 300% 300%;
+    animation: rg-proj-gradient-shift 18s ease infinite reverse;
+    mix-blend-mode: screen;
+  }
+}
+
+@keyframes rg-proj-gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes rg-proj-glow-shift {
+  0%,
+  100% {
+    box-shadow:
+      0 0 22px -3px rgba(34, 197, 94, 0.45),
+      0 0 44px -14px rgba(34, 197, 94, 0.18);
+  }
+  25% {
+    box-shadow:
+      0 0 24px -3px rgba(34, 211, 238, 0.48),
+      0 0 48px -14px rgba(34, 211, 238, 0.16);
+  }
+  50% {
+    box-shadow:
+      0 0 24px -3px rgba(139, 92, 246, 0.48),
+      0 0 48px -14px rgba(139, 92, 246, 0.18);
+  }
+  75% {
+    box-shadow:
+      0 0 24px -3px rgba(217, 70, 239, 0.45),
+      0 0 48px -14px rgba(217, 70, 239, 0.15);
   }
 }

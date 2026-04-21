@@ -98,7 +98,7 @@ export function SceneList({ projectId, scenes, sceneOrder, onOpenPromptStudio }:
             </div>
 
             {orderedScenes.length === 0 ? (
-                <div className="flex items-center gap-3 rounded-lg border border-dashed border-zinc-800/90 bg-zinc-900/20 px-3 py-3 sm:px-4">
+                <div className="flex items-center gap-3 rounded-lg border border-dashed border-[#222222] bg-[#0A0A0C] px-3 py-3 sm:px-4">
                     <Layers className="size-8 shrink-0 text-zinc-700" />
                     <p className="text-left text-xs text-zinc-500">
                         Urutan bisa diubah dengan drag handle. Isi form di bawah untuk scene pertama.
@@ -124,7 +124,7 @@ export function SceneList({ projectId, scenes, sceneOrder, onOpenPromptStudio }:
 
             <form
                 onSubmit={handleAddScene}
-                className="rounded-xl border border-zinc-800/90 bg-zinc-900/35 p-3 sm:p-4"
+                className="rounded-xl border border-[#1a1a1a] bg-[#0A0A0C] p-3 sm:p-4"
             >
                 <p className="mb-2.5 text-[10px] font-semibold uppercase tracking-wide text-zinc-500">Tambah scene</p>
                 <div className="flex flex-col gap-2 sm:grid sm:grid-cols-[1fr_1fr_auto] sm:items-end sm:gap-2.5">
@@ -133,14 +133,14 @@ export function SceneList({ projectId, scenes, sceneOrder, onOpenPromptStudio }:
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
                         placeholder="Nama scene"
-                        className="w-full rounded-lg border border-zinc-700 bg-zinc-950/50 px-2.5 py-2 text-xs text-zinc-100 placeholder-zinc-600 outline-none transition-colors focus:border-amber-500/55 sm:text-sm"
+                        className="w-full rounded-lg border border-[#222222] bg-[#050505] px-2.5 py-2 text-xs text-zinc-100 placeholder-zinc-600 outline-none transition-colors focus:border-amber-500/55 sm:text-sm"
                     />
                     <input
                         type="text"
                         value={newDescription}
                         onChange={(e) => setNewDescription(e.target.value)}
                         placeholder="Deskripsi (opsional)"
-                        className="w-full rounded-lg border border-zinc-700 bg-zinc-950/50 px-2.5 py-2 text-xs text-zinc-100 placeholder-zinc-600 outline-none transition-colors focus:border-amber-500/55 sm:text-sm"
+                        className="w-full rounded-lg border border-[#222222] bg-[#050505] px-2.5 py-2 text-xs text-zinc-100 placeholder-zinc-600 outline-none transition-colors focus:border-amber-500/55 sm:text-sm"
                     />
                     <button
                         type="submit"

@@ -14,6 +14,7 @@ export interface Scene {
   order: number // 1-based integer
   imagePrompt: string
   videoPrompt: string
+  audioPrompt?: string // optional field for ASMR/Voiceover
   imageData: string | null // base64 PNG
   promptStatus: PromptStatus
   imageStatus: PromptStatus
@@ -34,7 +35,7 @@ export interface Project {
 export interface Template {
   id: string
   name: string
-  scenes: Omit<Scene, 'imageData' | 'imagePrompt' | 'videoPrompt' | 'promptStatus' | 'imageStatus'>[]
+  scenes: Omit<Scene, 'imageData' | 'imagePrompt' | 'videoPrompt' | 'audioPrompt' | 'promptStatus' | 'imageStatus'>[]
   createdAt: number // Unix timestamp ms
 }
 
@@ -57,11 +58,6 @@ export interface SceneContext {
   contentMode: ContentMode
   visualStyle: string
   projectName: string
-  /** Urutan scene dalam project (1-based), untuk konsistensi seri */
-  sceneOrder: number
-  totalScenes: number
-  /** Instruksi kunci identitas subjek & lokasi antar scene */
-  visualConsistencyLock: string
 }
 
 export interface ApiKeys {
@@ -71,11 +67,23 @@ export interface ApiKeys {
   imagen: string
   /** Bisa berisi beberapa key dipisah koma: "key1,key2,key3" */
   openai: string
-  /** HeyGen / video API (opsional; slot untuk integrasi) */
+  /** HeyGen / video API (opsional) */
   heygen: string
+  /** Groq — gratis 14.400 req/hari, sangat cepat */
+  groq: string
+  /** fal.ai — video / image API (Authorization: Key …) */
+  fal: string
+  /** Hugging Face — Inference Providers (kuota gratis; tanpa saldo fal.ai) */
+  huggingface: string
 }
 
-export type ApiUsageProvider = 'gemini' | 'imagen' | 'openai' | 'heygen'
+export type ApiUsageProvider =
+  | 'gemini'
+  | 'imagen'
+  | 'openai'
+  | 'heygen'
+  | 'fal'
+  | 'huggingface'
 
 export interface ApiUsageEntry {
   /** Jumlah permintaan sukses ke provider ini dari app ini */
@@ -110,7 +118,7 @@ export interface AppState {
   duplicateScene: (projectId: string, sceneId: string) => void
   updateScene: (projectId: string, sceneId: string, name: string, description: string) => void
   reorderScenes: (projectId: string, newOrder: string[]) => void
-  updateScenePrompts: (projectId: string, sceneId: string, imagePrompt: string, videoPrompt: string) => void
+  updateScenePrompts: (projectId: string, sceneId: string, imagePrompt: string, videoPrompt: string, audioPrompt?: string) => void
   updateSceneImage: (projectId: string, sceneId: string, imageData: string) => void
 
   // Template actions

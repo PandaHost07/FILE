@@ -21,10 +21,20 @@ function setRotationIndex(provider: string, index: number) {
     } catch { /* ignore */ }
 }
 
+/** Hilangkan karakter tak terlihat dari salinan (BOM, zero-width, CR). */
+function sanitizeKeySegment(raw: string): string {
+    return raw
+        .replace(/^\uFEFF/, '')
+        .replace(/[\u200B-\u200D\uFEFF]/g, '')
+        .replace(/\r/g, '')
+        .trim()
+}
+
 export function parseKeys(keysString: string): string[] {
+    if (!keysString || typeof keysString !== 'string') return []
     return keysString
         .split(',')
-        .map((k) => k.trim())
+        .map((k) => sanitizeKeySegment(k))
         .filter((k) => k.length > 0)
 }
 

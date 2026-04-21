@@ -43,10 +43,10 @@ export function ProjectCard({ project, isActive, onOpen, onDelete, onDuplicate }
     return (
         <div
             className={cn(
-                'relative flex flex-col gap-3 rounded-xl border bg-zinc-900 p-4 transition-all',
+                'relative flex flex-col gap-3 rounded-2xl border border-[#1f1f24] bg-[#121214] p-4 shadow-lg shadow-black/20 transition-all',
                 isActive
-                    ? 'border-amber-500/60 shadow-md shadow-amber-500/5'
-                    : 'border-zinc-800 hover:border-amber-500/30 hover:shadow-lg hover:shadow-black/20'
+                    ? 'border-emerald-500/45 ring-1 ring-emerald-500/20'
+                    : 'hover:border-emerald-500/25'
             )}
         >
             {/* Header */}
@@ -55,12 +55,12 @@ export function ProjectCard({ project, isActive, onOpen, onDelete, onDuplicate }
                     <div className="flex items-center gap-2 flex-wrap">
                         <h3 className="text-sm font-semibold text-zinc-100 truncate">{project.name}</h3>
                         {isActive && (
-                            <span className="shrink-0 rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-medium text-amber-400">
+                            <span className="shrink-0 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-medium text-emerald-400">
                                 Aktif
                             </span>
                         )}
                     </div>
-                    <span className="mt-1 inline-block rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] font-medium text-amber-500">
+                    <span className="mt-1 inline-block rounded-full bg-zinc-800/80 px-2 py-0.5 text-[10px] font-medium text-zinc-400">
                         {categoryLabel[project.category] ?? project.category}
                     </span>
                 </div>
@@ -73,7 +73,7 @@ export function ProjectCard({ project, isActive, onOpen, onDelete, onDuplicate }
                                 e.stopPropagation()
                                 onDuplicate()
                             }}
-                            className="rounded-md p-1.5 text-zinc-500 transition-colors hover:bg-zinc-800 hover:text-amber-400"
+                            className="rounded-md p-1.5 text-zinc-500 transition-colors hover:bg-[#1a1a1e] hover:text-emerald-400"
                             title="Duplikat project"
                             aria-label="Duplikat project"
                         >
@@ -101,7 +101,7 @@ export function ProjectCard({ project, isActive, onOpen, onDelete, onDuplicate }
             {/* Open button */}
             <button
                 onClick={onOpen}
-                className="flex items-center justify-center gap-2 rounded-lg bg-amber-500/10 px-3 py-2 text-sm font-medium text-amber-400 transition-colors hover:bg-amber-500/20"
+                className="flex items-center justify-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm font-medium text-emerald-400 transition-colors hover:bg-emerald-500/20"
             >
                 <FolderOpen className="size-4" />
                 Buka Project
@@ -109,7 +109,7 @@ export function ProjectCard({ project, isActive, onOpen, onDelete, onDuplicate }
 
             {/* Confirm delete dialog */}
             {confirmDelete && (
-                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-xl bg-zinc-900/95 p-4">
+                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-2xl bg-[#121214]/95 p-4 backdrop-blur-sm">
                     <p className="text-center text-sm text-zinc-200">
                         Hapus <span className="font-semibold text-zinc-100">{project.name}</span>?
                     </p>

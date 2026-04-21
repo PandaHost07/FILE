@@ -9,7 +9,21 @@ export interface GenerateImageOptions {
     /** Seed per project → gaya lebih stabil antar scene (sama prompt+seed ≈ hasil sama). */
     seed?: number
     negativePrompt?: string
+    /** Rasio Stability Stable Image Core: 1:1, 16:9, 9:16, … */
+    aspectRatio?: string
 }
+
+const STABILITY_ASPECT_ALLOWED = new Set([
+    '1:1',
+    '16:9',
+    '21:9',
+    '2:3',
+    '3:2',
+    '4:5',
+    '5:4',
+    '9:16',
+    '9:21',
+])
 
 export async function generateImage(
     apiKey: string,
@@ -22,10 +36,15 @@ export async function generateImage(
     const timer = setTimeout(() => controller.abort(), 60_000)
 
     try {
+        const ar =
+            options?.aspectRatio && STABILITY_ASPECT_ALLOWED.has(options.aspectRatio)
+                ? options.aspectRatio
+                : '1:1'
+
         const formData = new FormData()
         formData.append('prompt', prompt)
         formData.append('output_format', 'png')
-        formData.append('aspect_ratio', '1:1')
+        formData.append('aspect_ratio', ar)
         if (options?.seed != null && Number.isFinite(options.seed)) {
             formData.append('seed', String(Math.floor(options.seed)))
         }

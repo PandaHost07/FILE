@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { GripVertical, Trash2, Wand2, Pencil, Copy, Check, X, ImageIcon } from 'lucide-react'
 import type { Scene } from '@/types'
-import { cn, toTwoDigitOrder } from '@/lib/utils'
+import { toTwoDigitOrder } from '@/lib/utils'
 import useAppStore from '@/store/useAppStore'
 
 interface SceneCardProps {
