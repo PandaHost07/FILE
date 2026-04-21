@@ -245,7 +245,12 @@ export function Sidebar() {
     }
 
     return (
-        <>
+        <div
+            className={cn(
+                'max-lg:w-0 max-lg:min-w-0 max-lg:shrink-0 max-lg:overflow-visible',
+                'lg:flex lg:w-auto lg:min-w-0 lg:shrink-0 lg:overflow-visible'
+            )}
+        >
             {/* Navbar HP / tablet: RestoreGen + menu (max-lg) */}
             <header
                 role="banner"
@@ -311,7 +316,9 @@ export function Sidebar() {
             <aside
                 className={cn(
                     'flex shrink-0 flex-col overflow-hidden transition-[width,transform] duration-300 ease-out motion-reduce:transition-none',
-                    'fixed bottom-0 left-0 z-50 lg:relative lg:inset-auto lg:z-auto',
+                    'fixed bottom-0 left-0 lg:relative lg:inset-auto',
+                    mobileNavOpen ? 'z-50' : 'max-lg:z-[5]',
+                    'lg:z-auto',
                     /* Di bawah app bar mobile (tinggi = safe + 3.5rem + border 1px) */
                     'max-lg:top-[calc(env(safe-area-inset-top)+3.5rem+1px)] max-lg:h-[calc(100dvh-env(safe-area-inset-top)-3.5rem-1px)] max-lg:max-h-none',
                     'lg:top-auto lg:h-[100dvh] lg:max-h-[100dvh]',
@@ -640,6 +647,6 @@ export function Sidebar() {
                 </div>
             )}
         </aside>
-        </>
+        </div>
     )
 }
