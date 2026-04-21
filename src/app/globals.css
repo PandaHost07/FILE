@@ -241,3 +241,75 @@
       0 0 48px -14px rgba(217, 70, 239, 0.15);
   }
 }
+
+/* ─── Login / register: sudut potong + latar animasi ─── */
+.rg-chamfer {
+  clip-path: polygon(28px 0%, 100% 0%, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0% 100%, 0% 28px);
+}
+
+.rg-login-root {
+  min-height: 100dvh;
+}
+
+.rg-login-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  animation: rg-login-grid-pan 48s linear infinite;
+}
+
+@keyframes rg-login-grid-pan {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+  100% {
+    background-position: 48px 48px, 48px 48px;
+  }
+}
+
+.rg-login-blob-a {
+  animation: rg-login-float-a 22s ease-in-out infinite;
+}
+
+.rg-login-blob-b {
+  animation: rg-login-float-b 26s ease-in-out infinite;
+}
+
+.rg-login-blob-c {
+  animation: rg-login-breathe 14s ease-in-out infinite;
+}
+
+@keyframes rg-login-breathe {
+  0%,
+  100% {
+    opacity: 0.38;
+  }
+  50% {
+    opacity: 0.62;
+  }
+}
+
+@keyframes rg-login-float-a {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translate(12%, 8%) scale(1.08);
+    opacity: 0.65;
+  }
+}
+
+@keyframes rg-login-float-b {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translate(-10%, -6%) scale(1.06);
+    opacity: 0.55;
+  }
+}

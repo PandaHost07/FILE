@@ -1,6 +1,6 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { Cloud, Loader2 } from 'lucide-react'
@@ -90,15 +90,24 @@ export function CloudSyncSection() {
                         <p className="text-[12px] text-zinc-400">
                             Masuk sebagai <span className="font-medium text-zinc-200">{session.user.email}</span>
                         </p>
-                        <button
-                            type="button"
-                            onClick={() => void syncNow()}
-                            disabled={loading}
-                            className="inline-flex items-center gap-2 rounded-xl border border-sky-500/35 bg-sky-500/10 px-4 py-2.5 text-sm font-semibold text-sky-300 transition hover:bg-sky-500/20 disabled:opacity-50"
-                        >
-                            {loading ? <Loader2 className="size-4 animate-spin" /> : <Cloud className="size-4" />}
-                            Sinkronkan sekarang
-                        </button>
+                        <div className="flex flex-wrap items-center gap-2">
+                            <button
+                                type="button"
+                                onClick={() => void syncNow()}
+                                disabled={loading}
+                                className="inline-flex items-center gap-2 rounded-xl border border-sky-500/35 bg-sky-500/10 px-4 py-2.5 text-sm font-semibold text-sky-300 transition hover:bg-sky-500/20 disabled:opacity-50"
+                            >
+                                {loading ? <Loader2 className="size-4 animate-spin" /> : <Cloud className="size-4" />}
+                                Sinkronkan sekarang
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => void signOut({ callbackUrl: '/login' })}
+                                className="rounded-xl border border-zinc-600/50 bg-zinc-800/40 px-4 py-2.5 text-sm font-medium text-zinc-400 transition hover:border-zinc-500 hover:text-zinc-200"
+                            >
+                                Keluar
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>

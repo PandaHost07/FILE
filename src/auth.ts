@@ -1,12 +1,9 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
-import bcrypt from 'bcryptjs'
-import prisma from '@/lib/prisma'
-import type { UserRole } from '@prisma/client'
+import { authConfig } from './auth.config'
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-    trustHost: true,
-    session: { strategy: 'jwt', maxAge: 30 * 24 * 60 * 60 },
+    ...authConfig,
     providers: [
         Credentials({
             name: 'Email',
@@ -19,6 +16,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 const password = credentials?.password?.toString() ?? ''
                 if (!email || !password) return null
 
+                const [{ default: prisma }, { default: bcrypt }] = await Promise.all([
+                    import('@/lib/prisma'),
+                    import('bcryptjs'),
+                ])
                 const user = await prisma.user.findUnique({
                     where: { email },
                 })
@@ -36,24 +37,4 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             },
         }),
     ],
-    callbacks: {
-        async jwt({ token, user }) {
-            if (user) {
-                token.id = user.id
-                token.role = (user as { role?: UserRole }).role
-                if (user.email) token.email = user.email
-                if (user.name !== undefined) token.name = user.name
-            }
-            return token
-        },
-        async session({ session, token }) {
-            if (session.user) {
-                session.user.id = token.id as string
-                session.user.role = (token.role as UserRole) ?? 'USER'
-                if (typeof token.email === 'string') session.user.email = token.email
-                session.user.name = (token.name as string | null | undefined) ?? null
-            }
-            return session
-        },
-    },
 })
