@@ -24,6 +24,7 @@ import { useToast } from '@/components/ui/toast'
 import { parseKeys, getKeyCount, resetRotation } from '@/lib/keyRotation'
 import type { ApiUsageProvider } from '@/types'
 import { cn } from '@/lib/utils'
+import { clearApiKeysIDB } from '@/lib/apiKeysIDB'
 
 const GEMINI_MODELS = [
     { id: 'gemini-2.0-flash-lite', label: 'Gemini 2.0 Flash Lite', desc: 'Hemat quota, stabil — recommended' },
@@ -172,8 +173,11 @@ export default function SettingsPage() {
     }
 
     function handleResetApp() {
-        localStorage.clear()
-        window.location.reload()
+        void (async () => {
+            await clearApiKeysIDB()
+            localStorage.clear()
+            window.location.reload()
+        })()
     }
 
     function addGeminiKey() {
